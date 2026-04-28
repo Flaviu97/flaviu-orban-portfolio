@@ -1,139 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Flaviu Orban | SOC Analyst</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0b0f19;
-            color: #e6edf3;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flaviu Orban | SOC Analyst Portfolio</title>
+  <style>
+    :root {
+      --bg: #080d14;
+      --panel: #101827;
+      --panel-2: #0d1422;
+      --text: #e5edf7;
+      --muted: #9fb0c3;
+      --accent: #38bdf8;
+      --accent-2: #22c55e;
+      --border: rgba(148, 163, 184, 0.18);
+    }
 
-        header {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, #0b0f19, #111827);
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
+    html {
+      scroll-behavior: smooth;
+    }
 
-        h2 {
-            border-bottom: 2px solid #1f6feb;
-            padding-bottom: 5px;
-        }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 30%), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-        section {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
 
-        .project {
-            background: #111827;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
 
-        .skills span {
-            display: inline-block;
-            background: #1f2937;
-            padding: 8px 12px;
-            margin: 5px;
-            border-radius: 5px;
-        }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(8, 13, 20, 0.86);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
 
-        footer {
-            text-align: center;
-            padding: 30px;
-            font-size: 14px;
-            color: #9ca3af;
-        }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
 
-        a {
-            color: #58a6ff;
-            text-decoration: none;
-        }
-    </style>
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+    }
+
+    .hero {
+      min-height: 72vh;
+      display: grid;
+      place-items: center;
+      padding: 80px 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--accent-2);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: 1.02;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 650px;
+      margin-bottom: 26px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(56, 189, 248, 0.08);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), #2563eb);
+      color: #03111f;
+      border: none;
+    }
+
+    .terminal-card {
+      background: linear-gradient(180deg, rgba(16, 24, 39, 0.95), rgba(13, 20, 34, 0.95));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      display: flex;
+      gap: 8px;
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.85;
+    }
+
+    .terminal-body {
+      padding: 22px;
+      font-family: Consolas, Monaco, monospace;
+      color: #c7f9d4;
+      font-size: 14px;
+    }
+
+    .terminal-body span {
+      color: var(--accent);
+    }
+
+    section {
+      padding: 72px 0;
+    }
+
+    .section-title {
+      font-size: 30px;
+      margin-bottom: 14px;
+    }
+
+    .section-intro {
+      color: var(--muted);
+      max-width: 720px;
+      margin-bottom: 30px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(16, 24, 39, 0.78);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .project {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+      background: rgba(16, 24, 39, 0.78);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+    }
+
+    .project img {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 14px 0;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tag {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.24);
+      color: #bdeeff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+    }
+
+    .timeline-item {
+      background: rgba(16, 24, 39, 0.78);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .timeline-item small {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 0;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 850px) {
+      .hero-grid,
+      .project,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <nav>
+    <div class="container nav-inner">
+      <div class="brand">Flaviu Orban</div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
 
-    <header>
-        <h1>Flaviu Orban</h1>
-        <p>Aspiring SOC Analyst | Security+ Certified | SIEM & Threat Detection</p>
-    </header>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Security+ Certified • SOC-Focused</div>
+          <h1>Building skills in threat detection, SIEM monitoring, and incident response.</h1>
+          <p>
+            I’m an aspiring SOC Analyst based in the UK with hands-on experience building a Splunk SIEM lab, analysing Windows event logs, and detecting brute-force authentication activity.
+          </p>
+          <div class="buttons">
+            <a class="btn primary" href="#projects">View Projects</a>
+            <a class="btn" href="#contact">Contact Me</a>
+          </div>
+        </div>
 
-    <section>
-        <h2>About Me</h2>
-        <p>
-            I am a Security+ certified aspiring SOC Analyst with hands-on experience in SIEM monitoring,
-            log analysis, and threat detection. I have built a Splunk lab where I simulated real-world attacks
-            and analysed Windows event logs to detect suspicious activity.
-        </p>
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+          <div class="terminal-body">
+            <p><span>$</span> search index=* EventCode=4625</p>
+            <p>Detected failed login attempts</p>
+            <p>Source IP: 192.168.1.113</p>
+            <p>Action: investigate → triage → document</p>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section>
-        <h2>Featured Project</h2>
+    <section id="about">
+      <div class="container">
+        <h2 class="section-title">About</h2>
+        <p class="section-intro">
+          I’m a CompTIA Security+ certified cybersecurity candidate with a background in technical support, software testing, and software development. My current focus is SOC operations, log analysis, threat detection, and practical blue-team workflows.
+        </p>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="container">
+        <h2 class="section-title">Featured Project</h2>
+        <p class="section-intro">A hands-on SOC lab project designed to simulate attack activity, collect logs, and detect suspicious authentication behaviour.</p>
 
         <div class="project">
+          <div>
             <h3>Splunk SIEM Lab – Brute Force Detection</h3>
             <p>
-                Built a SIEM lab using Splunk to detect brute-force login attempts (EventCode 4625).
+              Deployed Splunk on Ubuntu Server, configured Windows log forwarding, simulated brute-force login attempts from Kali Linux, and built dashboards to visualise attacker IPs, failed logins, and targeted accounts.
             </p>
-
             <ul>
-                <li>Configured Windows log ingestion using Splunk Universal Forwarder</li>
-                <li>Simulated attacks from Kali Linux</li>
-                <li>Detected failed login attempts and attacker IPs</li>
-                <li>Created dashboards to visualise attack patterns</li>
+              <li>Collected Windows Security logs using Splunk Universal Forwarder</li>
+              <li>Analysed EventCode 4625 failed login events</li>
+              <li>Identified source IP and repeated authentication failures</li>
+              <li>Built dashboard panels for SOC-style monitoring</li>
             </ul>
-
-            <p><strong>Technologies:</strong> Splunk, Kali Linux, Windows Event Logs</p>
-
-            <!-- ADD YOUR SCREENSHOTS HERE -->
-            <img src="dashboard.png" style="width:100%; border-radius:10px;">
+            <div class="tags">
+              <span class="tag">Splunk</span>
+              <span class="tag">SIEM</span>
+              <span class="tag">Windows Event Logs</span>
+              <span class="tag">Kali Linux</span>
+              <span class="tag">Threat Detection</span>
+            </div>
+          </div>
+          <div>
+            <img src="dashboard.png" alt="Splunk brute force detection dashboard screenshot" />
+          </div>
         </div>
-
+      </div>
     </section>
 
-    <section>
-        <h2>Skills</h2>
-        <div class="skills">
-            <span>Splunk</span>
-            <span>SIEM</span>
-            <span>Log Analysis</span>
-            <span>Threat Detection</span>
-            <span>Incident Response</span>
-            <span>Kali Linux</span>
-            <span>Nmap</span>
-            <span>Hydra</span>
+    <section id="skills">
+      <div class="container">
+        <h2 class="section-title">Skills</h2>
+        <div class="cards">
+          <div class="card">
+            <h3>SOC & Security</h3>
+            <p>SIEM monitoring, log analysis, incident triage, threat detection, Windows Event Logs, security documentation.</p>
+          </div>
+          <div class="card">
+            <h3>Tools</h3>
+            <p>Splunk, Kali Linux, Nmap, Hydra, Metasploit, John the Ripper, VirtualBox.</p>
+          </div>
+          <div class="card">
+            <h3>Systems & Development</h3>
+            <p>Windows, Linux, TCP/IP, DNS, DHCP, HTTP/S, SSH, C#, .NET, JavaScript, React, Git.</p>
+          </div>
         </div>
+      </div>
     </section>
 
-    <section>
-        <h2>Experience</h2>
-        <p>
-            Background in technical support and software development, with strong experience in troubleshooting,
-            incident analysis, and working in fast-paced technical environments.
-        </p>
+    <section id="experience">
+      <div class="container">
+        <h2 class="section-title">Experience</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <small>2024</small>
+            <h3>Technical Support Administrator</h3>
+            <p>Provided technical support, investigated incidents, performed root-cause analysis, and documented resolution steps.</p>
+          </div>
+          <div class="timeline-item">
+            <small>2024</small>
+            <h3>Front-End Developer</h3>
+            <p>Built responsive web interfaces and strengthened understanding of web application behaviour and troubleshooting.</p>
+          </div>
+          <div class="timeline-item">
+            <small>2022 – 2023</small>
+            <h3>Junior Software Developer</h3>
+            <p>Developed application features, debugged issues, and supported testing workflows.</p>
+          </div>
+          <div class="timeline-item">
+            <small>2020 – 2022</small>
+            <h3>Software Testing & Technical Support</h3>
+            <p>Performed regression testing, documented software defects, and supported users with technical issues.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section>
-        <h2>Contact</h2>
-        <p>Email: flaviu.orban@gmail.com</p>
-        <p>LinkedIn: <a href="#">www.linkedin.com/in/flaviu-orban-006b2b240</a></p>
+    <section id="contact">
+      <div class="container">
+        <h2 class="section-title">Contact</h2>
+        <p class="section-intro">I’m actively seeking SOC Analyst or Junior Security Analyst opportunities in the UK.</p>
+        <p>Email: <a href="mailto:flaviu.orban@gmail.com">flaviu.orban@gmail.com</a></p>
+        <p>LinkedIn: <a href="https://www.linkedin.com/in/flaviu-orban-006b2b240" target="_blank">linkedin.com/in/flaviu-orban-006b2b240</a></p>
+      </div>
     </section>
+  </main>
 
-    <footer>
-        <p>© 2026 Flaviu Orban</p>
-    </footer>
-
+  <footer>
+    <div class="container">© 2026 Flaviu Orban • SOC Analyst Portfolio</div>
+  </footer>
 </body>
 </html>
