@@ -262,6 +262,172 @@
       text-align: center;
     }
 
+    .attack-flow-section {
+      padding-top: 30px;
+    }
+
+    .attack-flow {
+      position: relative;
+      min-height: 250px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 22px;
+      align-items: center;
+      background: linear-gradient(135deg, rgba(16, 24, 39, 0.92), rgba(8, 13, 20, 0.92));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 34px;
+      overflow: hidden;
+    }
+
+    .attack-flow::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+      background-size: 34px 34px;
+      animation: gridMove 14s linear infinite;
+      pointer-events: none;
+    }
+
+    .node {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      background: rgba(8, 13, 20, 0.82);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
+    }
+
+    .node-icon, .shield-icon {
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+
+    .node h3 {
+      margin-bottom: 4px;
+    }
+
+    .node p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .firewall {
+      border-color: rgba(34, 197, 94, 0.45);
+      box-shadow: 0 0 35px rgba(34, 197, 94, 0.12);
+    }
+
+    .siem {
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow: 0 0 35px rgba(56, 189, 248, 0.12);
+    }
+
+    .packet-lane {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.5), transparent);
+      z-index: 1;
+    }
+
+    .lane-one {
+      left: 20%;
+      right: 55%;
+      top: 45%;
+    }
+
+    .lane-two {
+      left: 46%;
+      right: 30%;
+      top: 45%;
+    }
+
+    .packet {
+      position: absolute;
+      top: -5px;
+      left: 0;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 18px #ef4444;
+      animation: packetMove 2.4s linear infinite;
+    }
+
+    .packet.blue {
+      background: var(--accent);
+      box-shadow: 0 0 18px var(--accent);
+      animation-duration: 2.8s;
+    }
+
+    .packet.delayed {
+      animation-delay: 1.1s;
+    }
+
+    .block-flash {
+      position: absolute;
+      top: -14px;
+      right: -12px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 999px;
+      opacity: 0;
+      animation: blockPulse 2.4s infinite;
+    }
+
+    .log-stream {
+      position: absolute;
+      right: 16%;
+      bottom: 38px;
+      width: 150px;
+      height: 80px;
+      z-index: 1;
+    }
+
+    .log-stream span {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 14px var(--accent-2);
+      animation: logFloat 3s linear infinite;
+    }
+
+    .log-stream span:nth-child(1) { left: 10px; animation-delay: 0s; }
+    .log-stream span:nth-child(2) { left: 45px; animation-delay: 0.6s; }
+    .log-stream span:nth-child(3) { left: 82px; animation-delay: 1.2s; }
+    .log-stream span:nth-child(4) { left: 120px; animation-delay: 1.8s; }
+
+    @keyframes packetMove {
+      from { transform: translateX(0); opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      to { transform: translateX(190px); opacity: 0; }
+    }
+
+    @keyframes blockPulse {
+      0%, 55%, 100% { opacity: 0; transform: scale(0.9); }
+      62%, 78% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes logFloat {
+      from { transform: translateY(30px); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      to { transform: translateY(-45px); opacity: 0; }
+    }
+
+    @keyframes gridMove {
+      from { background-position: 0 0; }
+      to { background-position: 34px 34px; }
+    }
+
     @media (max-width: 850px) {
       .hero-grid,
       .project,
@@ -313,6 +479,56 @@
             <p>Detected failed login attempts</p>
             <p>Source IP: 192.168.1.113</p>
             <p>Action: investigate → triage → document</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="attack-flow-section">
+      <div class="container">
+        <h2 class="section-title">SOC Detection Workflow</h2>
+        <p class="section-intro">
+          A simplified visualisation of my lab workflow: simulated attack traffic is generated, blocked or monitored at the perimeter, and authentication events are collected by the SIEM for investigation.
+        </p>
+
+        <div class="attack-flow">
+          <div class="node attacker">
+            <div class="node-icon">☠</div>
+            <h3>Attacker</h3>
+            <p>Kali Linux</p>
+          </div>
+
+          <div class="packet-lane lane-one">
+            <span class="packet"></span>
+            <span class="packet delayed"></span>
+          </div>
+
+          <div class="node firewall">
+            <div class="shield-icon">🛡</div>
+            <h3>Firewall</h3>
+            <p>Traffic filtering</p>
+            <div class="block-flash">BLOCK</div>
+          </div>
+
+          <div class="packet-lane lane-two">
+            <span class="packet blue"></span>
+            <span class="packet blue delayed"></span>
+          </div>
+
+          <div class="node endpoint">
+            <div class="node-icon">💻</div>
+            <h3>Windows Host</h3>
+            <p>EventCode 4625</p>
+          </div>
+
+          <div class="log-stream">
+            <span></span><span></span><span></span><span></span>
+          </div>
+
+          <div class="node siem">
+            <div class="node-icon">📊</div>
+            <h3>SIEM</h3>
+            <p>Splunk Dashboard</p>
           </div>
         </div>
       </div>
