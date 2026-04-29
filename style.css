@@ -1,1 +1,46 @@
+ <style>
+      box-shadow: 0 0 14px var(--accent-2);
+      animation: logFloat 3s linear infinite;
+    }
 
+    .log-stream span:nth-child(1) { left: 10px; animation-delay: 0s; }
+    .log-stream span:nth-child(2) { left: 45px; animation-delay: 0.6s; }
+    .log-stream span:nth-child(3) { left: 82px; animation-delay: 1.2s; }
+    .log-stream span:nth-child(4) { left: 120px; animation-delay: 1.8s; }
+
+    @keyframes packetMove {
+      from { transform: translateX(0); opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      to { transform: translateX(190px); opacity: 0; }
+    }
+
+    @keyframes blockPulse {
+      0%, 55%, 100% { opacity: 0; transform: scale(0.9); }
+      62%, 78% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes logFloat {
+      from { transform: translateY(30px); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      to { transform: translateY(-45px); opacity: 0; }
+    }
+
+    @keyframes gridMove {
+      from { background-position: 0 0; }
+      to { background-position: 34px 34px; }
+    }
+
+    @media (max-width: 850px) {
+      .hero-grid,
+      .project,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
