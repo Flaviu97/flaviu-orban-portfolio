@@ -112,60 +112,6 @@
         </div>
       </div>
     </section>
-
-    <section class="attack-flow-section">
-      <div class="container">
-        <h2 class="section-title">SOC Detection Workflow</h2>
-
-        <p class="section-intro">
-          A simplified visualisation of my lab workflow: simulated attack traffic is generated, blocked or monitored at the perimeter, and authentication events are collected by the SIEM for investigation.
-        </p>
-
-        <div class="attack-flow">
-          <div class="node attacker">
-            <div class="node-icon">☠</div>
-            <h3>Attacker</h3>
-            <p>Kali Linux</p>
-          </div>
-
-          <div class="packet-lane lane-one">
-            <span class="packet"></span>
-            <span class="packet delayed"></span>
-          </div>
-
-          <div class="node firewall">
-            <div class="shield-icon">🛡</div>
-            <h3>Firewall</h3>
-            <p>Traffic filtering</p>
-            <div class="block-flash">BLOCK</div>
-          </div>
-
-          <div class="packet-lane lane-two">
-            <span class="packet blue"></span>
-            <span class="packet blue delayed"></span>
-          </div>
-
-          <div class="node endpoint">
-            <div class="node-icon">💻</div>
-            <h3>Windows Host</h3>
-            <p>EventCode 4625</p>
-          </div>
-
-          <div class="log-stream">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
-          <div class="node siem">
-            <div class="node-icon">📊</div>
-            <h3>SIEM</h3>
-            <p>Splunk Dashboard</p>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer>
