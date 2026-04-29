@@ -1,1 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Flaviu Orban</title>
+  <link rel="stylesheet" href="/flaviu-orban-portfolio/style.css">
+</head>
 
+<body>
+  <nav>
+    <div class="container nav-inner">
+      <div class="brand">Flaviu Orban</div>
+      <div class="nav-links">
+        <a href="/flaviu-orban-portfolio/">Home</a>
+        <a href="/flaviu-orban-portfolio/about/">About</a>
+        <a href="/flaviu-orban-portfolio/projects/">Projects</a>
+        <a href="/flaviu-orban-portfolio/skills/">Skills</a>
+        <a href="/flaviu-orban-portfolio/experience/">Experience</a>
+        <a href="/flaviu-orban-portfolio/contact/">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section>
+      <div class="container">
+        <h1 class="section-title">Projects</h1>
+        <p class="section-intro">
+          Hands-on cybersecurity projects focused on SIEM monitoring, threat detection, and real-world attack simulation.
+        </p>
+
+        <!-- PROJECT 1 -->
+        <div class="project">
+
+          <div>
+            <h2>Splunk SIEM Lab – Brute Force Detection</h2>
+
+            <p>
+              Built a full SIEM lab to simulate brute-force login attacks and detect them using log analysis and dashboards.
+            </p>
+
+            <ul>
+              <li>Deployed Splunk on Ubuntu Server</li>
+              <li>Configured Windows log forwarding using Universal Forwarder</li>
+              <li>Simulated brute-force attacks from Kali Linux</li>
+              <li>Analysed Windows Security Event Logs (EventCode 4625)</li>
+              <li>Identified attacker IPs and repeated failed logins</li>
+              <li>Built dashboards to visualise attack patterns</li>
+            </ul>
+
+            <div class="tags">
+              <span class="tag">Splunk</span>
+              <span class="tag">SIEM</span>
+              <span class="tag">Windows Event Logs</span>
+              <span class="tag">Kali Linux</span>
+              <span class="tag">Threat Detection</span>
+            </div>
+
+          </div>
+
+          <div>
+            <img src="../dashboard.png" alt="Splunk dashboard">
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">© 2026 Flaviu Orban • SOC Analyst Portfolio</div>
+  </footer>
+
+</body>
+</html>
