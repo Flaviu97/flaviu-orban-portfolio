@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- =========================
+       META & PAGE SETUP
+  ========================== -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- =========================
+       PAGE TITLE & STYLES
+  ========================== -->
   <title>Flaviu Orban | SOC Analyst Portfolio</title>
   <link rel="stylesheet" href="/flaviu-orban-portfolio/style.css">
 </head>
 
 <body>
+  <!-- =========================
+       NAVIGATION
+  ========================== -->
   <nav>
     <div class="container nav-inner">
       <div class="brand">Flaviu Orban</div>
+
       <div class="nav-links">
         <a href="/flaviu-orban-portfolio/">Home</a>
         <a href="/flaviu-orban-portfolio/about/">About</a>
@@ -22,25 +33,42 @@
     </div>
   </nav>
 
+  <!-- =========================
+       MAIN CONTENT
+  ========================== -->
   <main>
+    <!-- =========================
+         HERO SECTION
+    ========================== -->
     <section class="hero">
       <div class="container hero-grid">
         <div>
           <div class="eyebrow">Security+ Certified • SOC-Focused</div>
-          <h1>Building skills in threat detection, SIEM monitoring, and incident response.</h1>
+
+          <h1>
+            Building skills in threat detection, SIEM monitoring, and incident response.
+          </h1>
+
           <p>
             I’m an aspiring SOC Analyst based in the UK with hands-on experience building a Splunk SIEM lab, analysing Windows event logs, and detecting brute-force authentication activity.
           </p>
+
           <div class="buttons">
             <a class="btn primary" href="/flaviu-orban-portfolio/projects/">View Projects</a>
             <a class="btn" href="/flaviu-orban-portfolio/contact/">Contact Me</a>
           </div>
         </div>
 
+        <!-- =========================
+             TERMINAL CARD
+        ========================== -->
         <div class="terminal-card">
           <div class="terminal-header">
-            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
           </div>
+
           <div class="terminal-body">
             <p><span>$</span> search index=* EventCode=4625</p>
             <p>Detected failed login attempts</p>
@@ -51,25 +79,32 @@
       </div>
     </section>
 
+    <!-- =========================
+         SOC DETECTION WORKFLOW
+    ========================== -->
     <section class="attack-flow-section">
       <div class="container">
         <h2 class="section-title">SOC Detection Workflow</h2>
+
         <p class="section-intro">
           A simplified visualisation of my lab workflow: simulated attack traffic is generated, blocked or monitored at the perimeter, and authentication events are collected by the SIEM for investigation.
         </p>
 
         <div class="attack-flow">
+          <!-- Attacker -->
           <div class="node attacker">
             <div class="node-icon">☠</div>
             <h3>Attacker</h3>
             <p>Kali Linux</p>
           </div>
 
+          <!-- Packet Lane 1 -->
           <div class="packet-lane lane-one">
             <span class="packet"></span>
             <span class="packet delayed"></span>
           </div>
 
+          <!-- Firewall -->
           <div class="node firewall">
             <div class="shield-icon">🛡</div>
             <h3>Firewall</h3>
@@ -77,21 +112,28 @@
             <div class="block-flash">BLOCK</div>
           </div>
 
+          <!-- Packet Lane 2 -->
           <div class="packet-lane lane-two">
             <span class="packet blue"></span>
             <span class="packet blue delayed"></span>
           </div>
 
+          <!-- Endpoint -->
           <div class="node endpoint">
             <div class="node-icon">💻</div>
             <h3>Windows Host</h3>
             <p>EventCode 4625</p>
           </div>
 
+          <!-- Log Stream -->
           <div class="log-stream">
-            <span></span><span></span><span></span><span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
 
+          <!-- SIEM -->
           <div class="node siem">
             <div class="node-icon">📊</div>
             <h3>SIEM</h3>
