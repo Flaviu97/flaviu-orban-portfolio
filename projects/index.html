@@ -37,6 +37,10 @@
         <div class="project">
           <div>
             <h2>Splunk SIEM Lab – Brute Force Detection</h2>
+            <p style="color:var(--muted); margin-bottom:14px;">
+Simulated brute-force attack from Kali Linux against a Windows host.
+Detected using Splunk SIEM through EventCode 4625 and analysed via dashboards.
+</p>
 
             <p>
               Designed and implemented a SIEM-based detection workflow to identify brute-force login attempts using Windows Security logs.
@@ -51,6 +55,14 @@
             </ul>
 
             <h3>Detection Logic</h3>
+
+            <h3>Analysis & Reasoning</h3>
+<ul>
+  <li>Repeated failed logins indicate potential brute-force activity</li>
+  <li>Single source IP suggests targeted attack rather than user error</li>
+  <li>High frequency increases the likelihood of malicious behaviour</li>
+</ul>
+            
             <p>
               Identified suspicious authentication patterns by analysing repeated failed login attempts from a single source IP.
             </p>
@@ -62,6 +74,12 @@ index=* sourcetype=WinEventLog:Security EventCode=4625
             </pre>
 
             <h3>Investigation Process</h3>
+            <h3>Alert Triage</h3>
+<ul>
+  <li>Severity: Medium → High based on frequency</li>
+  <li>False positive check: compare with normal user login behaviour</li>
+  <li>Decision: escalate for further investigation</li>
+</ul>
             <ul>
               <li>Detected multiple failed login attempts within a short time frame</li>
               <li>Identified attacker IP address from Kali Linux</li>
@@ -70,6 +88,13 @@ index=* sourcetype=WinEventLog:Security EventCode=4625
             </ul>
 
             <h3>Outcome</h3>
+            <h3>Response Actions</h3>
+<ul>
+  <li>Block attacker IP at firewall</li>
+  <li>Reset affected user credentials</li>
+  <li>Enable account lockout policies</li>
+  <li>Monitor for repeated attempts</li>
+</ul>
             <ul>
               <li>Successfully detected simulated brute-force activity</li>
               <li>Built dashboards to visualise attacker IPs and targeted accounts</li>
