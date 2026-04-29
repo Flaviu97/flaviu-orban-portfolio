@@ -15,9 +15,6 @@
 </head>
 
 <body>
-  <!-- =========================
-       NAVIGATION
-  ========================== -->
   <nav>
     <div class="container nav-inner">
       <div class="brand">Flaviu Orban</div>
@@ -33,59 +30,48 @@
     </div>
   </nav>
 
-  <!-- =========================
-       MAIN CONTENT
-  ========================== -->
   <main>
-    <!-- =========================
-         HERO SECTION
-    ========================== -->
     <section class="hero">
       <div class="container hero-grid">
         <div>
           <div class="eyebrow">Security+ Certified • SOC-Focused</div>
 
-          <h1>
-            Building skills in threat detection, SIEM monitoring, and incident response.
-          </h1>
+          <h1>Building skills in threat detection, SIEM monitoring, and incident response.</h1>
 
           <p>
             I’m an aspiring SOC Analyst based in the UK with hands-on experience building a Splunk SIEM lab, analysing Windows event logs, and detecting brute-force authentication activity.
           </p>
 
           <div class="badge-row">
-             <span class="badge">Security+ Certified</span>
-             <span class="badge">Splunk SIEM</span>
-             <span class="badge">Windows Event Logs</span>
-             <span class="badge">Threat Detection</span>
+            <span class="badge">Security+ Certified</span>
+            <span class="badge">Splunk SIEM</span>
+            <span class="badge">Windows Event Logs</span>
+            <span class="badge">Threat Detection</span>
           </div>
 
           <div class="buttons">
             <a class="btn primary" href="/flaviu-orban-portfolio/projects/">View Projects</a>
             <a class="btn" href="/flaviu-orban-portfolio/contact/">Contact Me</a>
           </div>
+
+          <div class="stat-grid">
+            <div class="stat-card">
+              <strong>10+</strong>
+              <span>Detected failed login events</span>
+            </div>
+
+            <div class="stat-card">
+              <strong>3</strong>
+              <span>Lab systems configured</span>
+            </div>
+
+            <div class="stat-card">
+              <strong>1</strong>
+              <span>SIEM dashboard built</span>
+            </div>
+          </div>
         </div>
 
-        <div class="stat-grid">
-  <div class="stat-card">
-    <strong>10+</strong>
-    <span>Detected failed login events</span>
-  </div>
-
-  <div class="stat-card">
-    <strong>3</strong>
-    <span>Lab systems configured</span>
-  </div>
-
-  <div class="stat-card">
-    <strong>1</strong>
-    <span>SIEM dashboard built</span>
-  </div>
-</div>
-
-        <!-- =========================
-             TERMINAL CARD
-        ========================== -->
         <div class="terminal-card">
           <div class="terminal-header">
             <div class="dot"></div>
@@ -103,16 +89,30 @@
       </div>
     </section>
 
-    <div class="badge-row">
-      <span class="badge">Security+ Certified</span>
-      <span class="badge">Splunk SIEM</span>
-      <span class="badge">Windows Event Logs</span>
-      <span class="badge">Threat Detection</span>
-    </div>
+    <section class="feature-strip">
+      <div class="container feature-grid">
+        <div class="feature-item">
+          <h3>SIEM Monitoring</h3>
+          <p>Collecting and analysing security events using Splunk.</p>
+        </div>
 
-    <!-- =========================
-         SOC DETECTION WORKFLOW
-    ========================== -->
+        <div class="feature-item">
+          <h3>Log Analysis</h3>
+          <p>Investigating Windows authentication events and failed logins.</p>
+        </div>
+
+        <div class="feature-item">
+          <h3>Threat Detection</h3>
+          <p>Identifying brute-force activity and suspicious login behaviour.</p>
+        </div>
+
+        <div class="feature-item">
+          <h3>Incident Triage</h3>
+          <p>Following structured investigation and documentation workflows.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="attack-flow-section">
       <div class="container">
         <h2 class="section-title">SOC Detection Workflow</h2>
@@ -122,20 +122,17 @@
         </p>
 
         <div class="attack-flow">
-          <!-- Attacker -->
           <div class="node attacker">
             <div class="node-icon">☠</div>
             <h3>Attacker</h3>
             <p>Kali Linux</p>
           </div>
 
-          <!-- Packet Lane 1 -->
           <div class="packet-lane lane-one">
             <span class="packet"></span>
             <span class="packet delayed"></span>
           </div>
 
-          <!-- Firewall -->
           <div class="node firewall">
             <div class="shield-icon">🛡</div>
             <h3>Firewall</h3>
@@ -143,20 +140,17 @@
             <div class="block-flash">BLOCK</div>
           </div>
 
-          <!-- Packet Lane 2 -->
           <div class="packet-lane lane-two">
             <span class="packet blue"></span>
             <span class="packet blue delayed"></span>
           </div>
 
-          <!-- Endpoint -->
           <div class="node endpoint">
             <div class="node-icon">💻</div>
             <h3>Windows Host</h3>
             <p>EventCode 4625</p>
           </div>
 
-          <!-- Log Stream -->
           <div class="log-stream">
             <span></span>
             <span></span>
@@ -164,7 +158,6 @@
             <span></span>
           </div>
 
-          <!-- SIEM -->
           <div class="node siem">
             <div class="node-icon">📊</div>
             <h3>SIEM</h3>
@@ -174,5 +167,11 @@
       </div>
     </section>
   </main>
+
+  <footer>
+    <div class="container">
+      © 2026 Flaviu Orban • SOC Analyst Portfolio
+    </div>
+  </footer>
 </body>
 </html>
