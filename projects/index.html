@@ -33,37 +33,70 @@
         <!-- PROJECT 1 -->
         <div class="project">
 
-          <div>
-            <h2>Splunk SIEM Lab – Brute Force Detection</h2>
+  <div>
+    <h2>Splunk SIEM Lab – Brute Force Detection</h2>
 
-            <p>
-              Built a full SIEM lab to simulate brute-force login attacks and detect them using log analysis and dashboards.
-            </p>
+    <p>
+      Designed and implemented a SIEM-based detection workflow to identify brute-force login attempts using Windows Security logs.
+    </p>
 
-            <ul>
-              <li>Deployed Splunk on Ubuntu Server</li>
-              <li>Configured Windows log forwarding using Universal Forwarder</li>
-              <li>Simulated brute-force attacks from Kali Linux</li>
-              <li>Analysed Windows Security Event Logs (EventCode 4625)</li>
-              <li>Identified attacker IPs and repeated failed logins</li>
-              <li>Built dashboards to visualise attack patterns</li>
-            </ul>
+    <h3>Lab Overview</h3>
+    <ul>
+      <li>Deployed Splunk on Ubuntu Server</li>
+      <li>Configured Windows log forwarding using Universal Forwarder</li>
+      <li>Simulated brute-force attacks from Kali Linux</li>
+      <li>Generated multiple failed login attempts (EventCode 4625)</li>
+    </ul>
 
-            <div class="tags">
-              <span class="tag">Splunk</span>
-              <span class="tag">SIEM</span>
-              <span class="tag">Windows Event Logs</span>
-              <span class="tag">Kali Linux</span>
-              <span class="tag">Threat Detection</span>
-            </div>
+    <h3>Detection Logic</h3>
+    <p>
+      Identified suspicious authentication patterns by analysing repeated failed login attempts from a single source IP.
+    </p>
 
-          </div>
+    <pre style="background:#0d1422; padding:15px; border-radius:10px; overflow:auto;">
+index=* sourcetype=WinEventLog:Security EventCode=4625
+| stats count by Source_Network_Address, Account_Name
+| sort - count
+    </pre>
 
-          <div>
-            <img src="../dashboard.png" alt="Splunk dashboard">
-          </div>
+    <h3>Investigation Process</h3>
+    <ul>
+      <li>Detected multiple failed login attempts within a short time frame</li>
+      <li>Identified attacker IP address (192.168.1.113)</li>
+      <li>Correlated events with targeted user accounts</li>
+      <li>Confirmed brute-force behaviour based on repetition patterns</li>
+    </ul>
 
-        </div>
+    <h3>Outcome</h3>
+    <ul>
+      <li>Successfully detected simulated brute-force attack</li>
+      <li>Visualised attack trends using Splunk dashboards</li>
+      <li>Developed understanding of SOC alert triage workflow</li>
+    </ul>
+
+    <div class="tags">
+      <span class="tag">Splunk</span>
+      <span class="tag">SIEM</span>
+      <span class="tag">Windows Event Logs</span>
+      <span class="tag">Kali Linux</span>
+      <span class="tag">Threat Detection</span>
+    </div>
+
+  </div>
+
+  <div>
+    <img src="../dashboard.png" alt="Splunk dashboard">
+
+    <p style="margin-top:10px; color:var(--muted); font-size:14px;">
+      Dashboard showing failed login attempts over time and top attacking IP addresses.
+    </p>
+
+  </div>
+
+          <h3>Log Evidence</h3>
+<img src="../logs.png" style="width:100%; border-radius:10px;">
+
+</div>
 
       </div>
     </section>
