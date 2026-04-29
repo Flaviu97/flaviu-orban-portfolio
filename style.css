@@ -1,4 +1,3 @@
- <style>
       box-shadow: 0 0 14px var(--accent-2);
       animation: logFloat 3s linear infinite;
     }
@@ -43,4 +42,3 @@
         display: none;
       }
     }
-  </style>
