@@ -1,123 +1,170 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- =========================
-       META & PAGE SETUP
-  ========================== -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html><head><style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f5f7fb;color:#222;line-height:1.7;margin:0}
+.container{max-width:900px;margin:40px auto;background:#fff;padding:48px;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.08)}
+h1{font-size:2.5rem;border-bottom:3px solid #2563eb;padding-bottom:.5rem}
+h2{margin-top:2.5rem;color:#1d4ed8;border-left:4px solid #2563eb;padding-left:.6rem}
+h3{margin-top:1.8rem}
+pre{background:#1e293b;color:#f8fafc;padding:16px;border-radius:8px;overflow:auto}
+code{font-family:Consolas,monospace}
+table{border-collapse:collapse;width:100%;margin:1rem 0}
+th,td{border:1px solid #ddd;padding:10px;text-align:left}
+th{background:#eef4ff}
+blockquote{border-left:4px solid #2563eb;padding-left:1rem;color:#555}
+a{color:#2563eb;text-decoration:none}a:hover{text-decoration:underline}
+hr{border:none;border-top:1px solid #ddd;margin:2rem 0}
+</style></head><body><div class="container"><h1 id="brute-force-in-application-testing-two-sides-of-the-same-coin">Brute Force in Application Testing: Two Sides of the Same Coin</h1>
+<p>When testers hear "brute force," most jump straight to security — someone hammering a login form with password lists. But brute force is also a legitimate <em>testing strategy</em>, one that shows up constantly in unit test design, combinatorial testing, and fuzzing. Understanding both sides — using brute force as a technique, and testing your application's resistance to it as an attack — makes for a more complete QA skill set.</p>
+<p>This post walks through both.</p>
+<h2 id="part-1-brute-force-as-a-testing-technique">Part 1: Brute Force as a Testing Technique</h2>
+<h3 id="what-it-actually-means-here">What it actually means here</h3>
+<p>In this context, "brute force" means exhaustively exercising every possible input, state, or combination rather than relying on intuition or sampling. It's the testing equivalent of trying every key on a keyring instead of guessing which one fits.</p>
+<p>The appeal is obvious: if you test every case, you can't miss anything within that input space. The problem is equally obvious: input spaces grow combinatorially, and exhaustive testing becomes computationally infeasible fast.</p>
+<p>Consider a function validating a 4-digit PIN plus a 3-character currency code:</p>
+<pre><code class="lang-python"><span class="hljs-comment"># Naive brute force: every possible input</span>
+<span class="hljs-keyword">for</span> pin <span class="hljs-keyword">in</span> range(<span class="hljs-number">10000</span>):
+    <span class="hljs-keyword">for</span> currency <span class="hljs-keyword">in</span> itertools.product(<span class="hljs-built_in">string</span>.ascii_uppercase, <span class="hljs-keyword">repeat</span>=<span class="hljs-number">3</span>):
+        <span class="hljs-literal">result</span> = validate(f<span class="hljs-string">"{pin:04d}"</span>, <span class="hljs-string">""</span>.join(currency))
+        assert <span class="hljs-literal">result</span> <span class="hljs-keyword">in</span> (True, False)  <span class="hljs-comment"># never crashes</span>
+</code></pre>
+<p>That's 10,000 × 17,576 ≈ 175 million calls for one function. It works for something this small, but add a couple more parameters and you're no longer testing — you're running a batch job that outlives the CI pipeline.</p>
+<h3 id="where-exhaustive-brute-force-actually-earns-its-place">Where exhaustive brute force actually earns its place</h3>
+<p>Despite the scaling problem, there are legitimate spots for it:</p>
+<ul>
+<li><strong>Small, bounded domains.</strong> Enum values, boolean flags, small lookup tables, state machines with a handful of states. If the domain is small enough to enumerate in seconds, just enumerate it.</li>
+<li><strong>Regression suites for previously-broken logic.</strong> If a bug was caused by one specific combination of inputs, and the domain is small, exhaustive coverage of that domain is cheap insurance.</li>
+<li><strong>Property-based / generative testing.</strong> Tools like <a href="https://hypothesis.readthedocs.io/">Hypothesis</a> (Python), QuickCheck (Haskell), or jqwik (Java) aren't pure brute force, but they lean on the same instinct — generate a large volume of inputs automatically and check invariants hold — while using shrinking and heuristics to avoid the combinatorial blowup of true exhaustion.</li>
+</ul>
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> hypothesis <span class="hljs-keyword">import</span> given, strategies <span class="hljs-keyword">as</span> st
 
-  <!-- =========================
-       PAGE TITLE & STYLES
-  ========================== -->
-  <title>Flaviu Orban | SOC Analyst Portfolio</title>
-  <link rel="stylesheet" href="/flaviu-orban-portfolio/style.css">
-</head>
+<span class="hljs-meta">@given(st.integers(), st.integers())</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">test_addition_is_commutative</span><span class="hljs-params">(a, b)</span>:</span>
+    <span class="hljs-keyword">assert</span> add(a, b) == add(b, a)
+</code></pre>
+<p>This is brute force with a brain: Hypothesis generates hundreds of cases, biases toward edge values (0, -1, max int), and narrows failing inputs to a minimal reproducible case automatically.</p>
+<h3 id="the-smarter-alternative-combinatorial-and-pairwise-testing">The smarter alternative: combinatorial and pairwise testing</h3>
+<p>For anything beyond a trivially small domain, full brute force is usually the wrong tool. <strong>Pairwise (all-pairs) testing</strong> is the standard substitute: instead of testing every combination of every parameter, you test every <em>pair</em> of parameter values at least once. Research and field experience (going back to NIST's work on combinatorial testing) consistently show that the overwhelming majority of real-world defects are triggered by interactions between two parameters, not four or five simultaneously.</p>
+<p>A browser × OS × screen-size × locale test matrix with 5 × 4 × 3 × 6 values is 360 exhaustive combinations. A pairwise tool (e.g., PICT from Microsoft, or <code>allpairspy</code> in Python) can typically cover all pairwise interactions in 20–30 cases.</p>
+<pre><code class="lang-python">from allpairspy import <span class="hljs-symbol">AllPairs</span>
 
-<body>
-  <nav>
-    <div class="container nav-inner">
-      <div class="brand">Flaviu Orban</div>
+parameters = [
+    [<span class="hljs-string">"Chrome"</span>, <span class="hljs-string">"Firefox"</span>, <span class="hljs-string">"Safari"</span>, <span class="hljs-string">"Edge"</span>, <span class="hljs-string">"Opera"</span>],
+    [<span class="hljs-string">"Windows"</span>, <span class="hljs-string">"macOS"</span>, <span class="hljs-string">"Linux"</span>, <span class="hljs-string">"Android"</span>],
+    [<span class="hljs-string">"small"</span>, <span class="hljs-string">"medium"</span>, <span class="hljs-string">"large"</span>],
+    [<span class="hljs-string">"en"</span>, <span class="hljs-string">"es"</span>, <span class="hljs-string">"fr"</span>, <span class="hljs-string">"de"</span>, <span class="hljs-string">"ja"</span>, <span class="hljs-string">"zh"</span>],
+]
 
-      <div class="nav-links">
-        <a href="/flaviu-orban-portfolio/">Home</a>
-        <a href="/flaviu-orban-portfolio/about/">About</a>
-        <a href="/flaviu-orban-portfolio/projects/">Projects</a>
-        <a href="/flaviu-orban-portfolio/skills/">Skills</a>
-        <a href="/flaviu-orban-portfolio/experience/">Experience</a>
-        <a href="/flaviu-orban-portfolio/contact/">Contact</a>
-      </div>
-    </div>
-  </nav>
+for combo in <span class="hljs-symbol">AllPairs</span>(parameters):
+    run_test(*combo)
+</code></pre>
+<p>The takeaway for a test plan: <strong>brute force is a starting hypothesis, not a default strategy.</strong> Use it deliberately on small domains or as a sanity baseline, then justify any reduction (pairwise, boundary value analysis, equivalence partitioning) explicitly rather than just sampling randomly.</p>
+<h3 id="fuzzing-brute-force-at-the-input-byte-level">Fuzzing: brute force at the input-byte level</h3>
+<p>Fuzz testing applies the same exhaustive-generation instinct at a lower level — feeding malformed, random, or mutated input directly into parsers, APIs, or binaries to find crashes, hangs, or memory issues. Coverage-guided fuzzers like AFL++ or libFuzzer aren't blind brute force either; they instrument the code and mutate inputs that increase code coverage, which is a much more efficient search than uniform random generation. For a QA engineer testing an API layer, a lightweight equivalent is throwing malformed JSON, oversized payloads, unexpected types, and boundary-adjacent values at every endpoint as part of the negative test suite.</p>
+<hr/>
+<h2 id="part-2-testing-resilience-against-brute-force-attacks">Part 2: Testing Resilience <em>Against</em> Brute Force Attacks</h2>
+<p>This is the security-adjacent half, and it's just as relevant to an application tester's job — arguably more so, since it maps directly to OWASP's testing guidance.</p>
+<h3 id="what-s-actually-being-tested">What's actually being tested</h3>
+<p>A brute force attack systematically tries many input combinations — usually credentials — until one succeeds. Variants a tester should have on their checklist:</p>
+<ul>
+<li><strong>Credential brute forcing</strong> — trying many passwords against one username.</li>
+<li><strong>Credential stuffing</strong> — trying breached username/password pairs across many accounts.</li>
+<li><strong>Password spraying</strong> — trying a small number of common passwords against many usernames, to stay under per-account lockout thresholds.</li>
+<li><strong>Token/OTP brute forcing</strong> — guessing short numeric codes (password reset tokens, 2FA codes, session identifiers).</li>
+</ul>
+<p>OWASP's <a href="https://owasp.org/www-project-web-security-testing-guide/">Testing for Weak Lock Out Mechanism</a> and Authentication Testing sections are the standard reference points here, and they're worth citing in a workplace-facing writeup to show the work is grounded in an established methodology rather than ad hoc opinion.</p>
+<h3 id="what-good-defenses-look-like-and-what-to-test-for-each">What "good" defenses look like, and what to test for each</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What to verify</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rate limiting</td>
+<td>Requests beyond a threshold (e.g., 5/min per IP or per account) get throttled or rejected (429)</td>
+</tr>
+<tr>
+<td>Account lockout</td>
+<td>Account locks after N failed attempts; lockout duration and reset behavior are correct</td>
+</tr>
+<tr>
+<td>Exponential backoff</td>
+<td>Delay between allowed attempts increases rather than staying flat</td>
+</tr>
+<tr>
+<td>CAPTCHA / challenge</td>
+<td>Triggers after a defined failure threshold, not on every request</td>
+</tr>
+<tr>
+<td>Generic error messages</td>
+<td>"Invalid username or password" — not "username not found" vs "wrong password," which leaks valid usernames</td>
+</tr>
+<tr>
+<td>Token entropy</td>
+<td>Reset tokens / OTPs are long and random enough that brute forcing within their validity window is infeasible</td>
+</tr>
+<tr>
+<td>Alerting</td>
+<td>Repeated failures generate a security event/log entry for monitoring</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a-concrete-test-example">A concrete test example</h3>
+<p>Here's a representative test using <code>pytest</code> and <code>requests</code> against a login endpoint, checking both the lockout behavior and that the response doesn't leak information:</p>
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> requests
+<span class="hljs-keyword">import</span> time
 
-  <main>
-    <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <div class="eyebrow">Security+ Certified • SOC-Focused</div>
+BASE_URL = <span class="hljs-string">"https://staging.example.com/api/login"</span>
 
-          <h1>Building skills in threat detection, SIEM monitoring, and incident response.</h1>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">attempt_login</span><span class="hljs-params">(username, password)</span>:</span>
+    <span class="hljs-keyword">return</span> requests.post(BASE_URL, json={<span class="hljs-string">"username"</span>: username, <span class="hljs-string">"password"</span>: password})
 
-          <p>
-            I’m an aspiring SOC Analyst based in the UK with hands-on experience building a Splunk SIEM lab, analysing Windows event logs, and detecting brute-force authentication activity.
-          </p>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">test_account_locks_after_threshold</span><span class="hljs-params">()</span>:</span>
+    username = <span class="hljs-string">"qa_test_user"</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">5</span>):
+        resp = attempt_login(username, <span class="hljs-string">"wrong_password"</span>)
+        <span class="hljs-keyword">assert</span> resp.status_code == <span class="hljs-number">401</span>
 
-          <div class="badge-row">
-            <span class="badge">Security+ Certified</span>
-            <span class="badge">Splunk SIEM</span>
-            <span class="badge">Windows Event Logs</span>
-            <span class="badge">Threat Detection</span>
-          </div>
+    <span class="hljs-comment"># 6th attempt should be locked out, not just another 401</span>
+    resp = attempt_login(username, <span class="hljs-string">"wrong_password"</span>)
+    <span class="hljs-keyword">assert</span> resp.status_code == <span class="hljs-number">429</span>
+    <span class="hljs-keyword">assert</span> <span class="hljs-string">"locked"</span> <span class="hljs-keyword">in</span> resp.json().get(<span class="hljs-string">"message"</span>, <span class="hljs-string">""</span>).lower()
 
-          <div class="buttons">
-            <a class="btn primary" href="/flaviu-orban-portfolio/projects/">View Projects</a>
-            <a class="btn" href="/flaviu-orban-portfolio/contact/">Contact Me</a>
-          </div>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">test_error_messages_do_not_leak_valid_usernames</span><span class="hljs-params">()</span>:</span>
+    resp_valid_user = attempt_login(<span class="hljs-string">"known_real_user"</span>, <span class="hljs-string">"wrong_password"</span>)
+    resp_invalid_user = attempt_login(<span class="hljs-string">"definitely_not_a_real_user"</span>, <span class="hljs-string">"wrong_password"</span>)
 
-          <div class="stat-grid">
-            <div class="stat-card">
-              <strong>10+</strong>
-              <span>Detected failed login events</span>
-            </div>
+    <span class="hljs-comment"># Both should return identical status and message shape</span>
+    <span class="hljs-keyword">assert</span> resp_valid_user.status_code == resp_invalid_user.status_code
+    <span class="hljs-keyword">assert</span> resp_valid_user.json()[<span class="hljs-string">"message"</span>] == resp_invalid_user.json()[<span class="hljs-string">"message"</span>]
 
-            <div class="stat-card">
-              <strong>3</strong>
-              <span>Lab systems configured</span>
-            </div>
-
-            <div class="stat-card">
-              <strong>1</strong>
-              <span>SIEM dashboard built</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="terminal-card">
-          <div class="terminal-header">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-          </div>
-
-          <div class="terminal-body">
-            <p><span>$</span> search index=* EventCode=4625</p>
-            <p>Detected failed login attempts</p>
-            <p>Source IP: 192.168.1.113</p>
-            <p>Action: investigate → triage → document</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="feature-strip">
-      <div class="container feature-grid">
-        <div class="feature-item">
-          <h3>SIEM Monitoring</h3>
-          <p>Collecting and analysing security events using Splunk.</p>
-        </div>
-
-        <div class="feature-item">
-          <h3>Log Analysis</h3>
-          <p>Investigating Windows authentication events and failed logins.</p>
-        </div>
-
-        <div class="feature-item">
-          <h3>Threat Detection</h3>
-          <p>Identifying brute-force activity and suspicious login behaviour.</p>
-        </div>
-
-        <div class="feature-item">
-          <h3>Incident Triage</h3>
-          <p>Following structured investigation and documentation workflows.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      © 2026 Flaviu Orban • SOC Analyst Portfolio
-    </div>
-  </footer>
-</body>
-</html>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">test_rate_limit_headers_present</span><span class="hljs-params">()</span>:</span>
+    resp = attempt_login(<span class="hljs-string">"qa_test_user"</span>, <span class="hljs-string">"wrong_password"</span>)
+    <span class="hljs-keyword">assert</span> <span class="hljs-string">"Retry-After"</span> <span class="hljs-keyword">in</span> resp.headers <span class="hljs-keyword">or</span> <span class="hljs-string">"X-RateLimit-Remaining"</span> <span class="hljs-keyword">in</span> resp.headers
+</code></pre>
+<p>A few things worth calling out about this test set, since they're the kind of detail that separates a "checks the box" test from one that reflects real understanding:</p>
+<ol>
+<li><strong>It tests the lockout state, not just individual responses.</strong> A single failed login returning 401 is expected; the interesting assertion is what happens once a threshold is crossed.</li>
+<li><strong>It tests for information leakage, not just functional correctness.</strong> Two different failure reasons producing two different responses is a subtle but common real-world finding.</li>
+<li><strong>It checks for the presence of rate-limit signaling</strong>, which matters for legitimate clients (and for automated retry logic elsewhere in the system) as much as for attackers.</li>
+</ol>
+<h3 id="tooling-for-this-kind-of-testing">Tooling for this kind of testing</h3>
+<p>Manually scripting brute-force-resilience tests is reasonable for CI-integrated regression checks, but for exploratory security testing, dedicated tools do this far more thoroughly:</p>
+<ul>
+<li><strong>Burp Suite Intruder</strong> — configurable payload-based brute forcing against any HTTP parameter, useful for manually validating lockout thresholds.</li>
+<li><strong>OWASP ZAP</strong> — has automated scan rules that include brute-force and fuzzing checks, and integrates into CI pipelines.</li>
+<li><strong>Hydra / Medusa</strong> — network-service-level brute-force tools, more relevant if the application exposes non-HTTP auth (SSH, FTP, database logins) that also needs lockout verification.</li>
+</ul>
+<p>Any of these should only be run against staging/test environments with explicit authorization — running brute-force tools against production or third-party systems without sign-off is the kind of thing that turns a test plan into an incident report.</p>
+<hr/>
+<h2 id="bringing-the-two-together">Bringing the Two Together</h2>
+<p>The connective thread is this: <strong>"brute force" as a technique and "brute force" as an attack are really the same underlying idea — exhaustive search over an input space — applied from opposite sides of the system.</strong> A tester who understands combinatorial explosion, why exhaustive testing doesn't scale, and how to substitute smarter strategies (pairwise testing, generative testing, coverage-guided fuzzing) is well positioned to reason about the <em>other</em> side too: what does exhaustive search look like from an attacker's perspective, and what controls make that search infeasible in practice.</p>
+<p>For a test plan or QA strategy doc, that means:</p>
+<ul>
+<li>Justify test-case reduction techniques explicitly rather than testing everything or sampling arbitrarily.</li>
+<li>Include brute-force-resilience checks (lockout, rate limiting, generic error messages, token entropy) as a standard part of authentication test suites, not a one-off security review item.</li>
+<li>Reference established frameworks (OWASP Testing Guide, NIST combinatorial testing research) when justifying methodology — it signals the approach is grounded, not improvised.</li>
+</ul>
+<p>That combination — technique-level rigor and attack-surface awareness — is what separates "I wrote some tests" from "I understand what I'm testing and why."</p>
+</div></body></html>
